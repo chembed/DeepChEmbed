@@ -1,1 +1,1 @@
-# ChEmbed
+# DeepChEmbed
