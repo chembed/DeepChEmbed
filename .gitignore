@@ -107,11 +107,6 @@ venv.bak/
 DATA/*
 data/*
 
-# frontend outputs
-speedcom/frontend/output/*
-
 #MAC
 .DS_Store
 
-#Testing file:
-test_readData_temp.tsv
