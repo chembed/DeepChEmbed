@@ -13,7 +13,7 @@ script: pytest
 install:
   - pip install coverage
   - pip install coveralls
-  - pip install -r requiremnts.txt
+  - pip install -r requirements.txt
 
 
 # generate a coverage report to send to back to user
