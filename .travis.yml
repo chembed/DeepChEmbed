@@ -12,3 +12,9 @@ install:
   - pip install coverage
   - pip install coveralls
 #  - pip install -r requiremnts.txt
+
+
+
+# generate a coverage report to send to back to user
+after_success:
+  - coveralls
