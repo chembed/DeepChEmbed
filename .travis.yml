@@ -1,1 +1,14 @@
-langurage: python
+language: python
+
+python:
+  - "3.6"
+
+branches:
+  only:
+    - master
+
+#set up enviroment
+install:
+  - pip install coverage
+  - pip install coveralls
+#  - pip install -r requiremnts.txt
