@@ -9,6 +9,9 @@ often applied to map the high-dimensional data into clustering-friendly space to
 to linear DR methods (e.g. PCA, CCA), deep neural networks has demonstrated its power in nonlinear mapping of high-  
 dimensional domain into reduced-dimensional latent spaces. The latent representation of data can then be used as  
 input for clustering tasks.  
+Combining deep neural network (DNN) based DR and K-means clustering would require a two-phase training procedure  
+which optimize on both the representation learning and the clustering. 
+
 
 ## Objectives  
 
