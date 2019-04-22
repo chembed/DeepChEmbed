@@ -1,14 +1,18 @@
 # Use Cases  
 
 ## Background  
-###
+Clustering a set of molecules into different groups based on their molecular properties is very useful to establish   
+understanding of how features are contributing to the separation. Good separation of chemical property is fundamental   
+to data reprentation and visualization.   
+Performances of common clustering methods is highly dependent on the input data. 
 
 ## Objectives  
-###  Achieve robust and efficient clustering of a large unlabled datasets (e.g, ChEMBL with 1.8M chemicals) by:
-###  1. Explore autoencoder neural network to lower the features dimension of the given dataset
-###  2. Adapt K-mean clustering algorithm to the low dimensional features
-###  3. Evaluate the clustering result by the loss function of the autoencoder, the convergence of K-mean method
-###     and the compatibility between the autoencoder and the k-mean method.
+
+Achieve robust and efficient clustering of a large unlabled datasets (e.g, ChEMBL with 1.8M chemicals) by:
+* 1. Explore autoencoder neural network to reduce dimension of the given dataset
+* 2. Adapt K-mean clustering algorithm to the latent space
+* 3. Evaluate the clustering result by the loss function of the autoencoder, the convergence of K-mean method  
+     and the compatibility between the autoencoder and the k-mean method.
 
 ## Components  
 
