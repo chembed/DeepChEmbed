@@ -15,25 +15,27 @@ which optimize on both the representation learning and the clustering.
 
 ## Objectives  
 
-Achieve robust and efficient clustering of a large unlabled datasets (e.g, ChEMBL with 1.8M chemicals) by:
-* 1. Explore autoencoder neural network to reduce dimension of the given dataset
-* 2. Adapt K-mean clustering algorithm to the latent space
-* 3. Evaluate the clustering result by the loss function of the autoencoder, the convergence of K-mean method  
-     and the compatibility between the autoencoder and the k-mean method.
+Achieve robust and efficient clustering and embedding of high dimensional chemical datasets (e.g, ChEMBL with 1.8M chemicals), pre-filtered with domain knowledge, *_e.g._*, bio-degration or molecular toxicity.
 
 ## Components  
 
-### Data Cleaning  
+### Data Cleaning
+Generate features using existing packages like *_RDKit_*, and select those based on both data disctribution and domain knowledges
 
 ### Embedding Layers
+Autoencoder neural network to reduce dimension of the given dataset
 
 ### Clustering  
+K-mean clustering algorithm or other unsupervised/supervised clustering methods to the latent space
 
 ### Validation  
-
-1. Smaller synthetic dataset   
-A small synthetic dataset that contains 100+ of feature and 1000+ of data points is used to evaluate
+Evaluate the clustering result by the loss function of the autoencoder, the convergence of clustering (K-mean) method  
+and the combination between the autoencoder and the k-mean method.
+     
+1. Smaller synthetic dataset with labels
+A small synthetic dataset that contains 100+ feature and 1000+ data points is used to estabulish a valid model. The model could be evaluated by the autoencoder loss and the clustering impurity. 
 
 2. Larger unlabeled dataset
+1.8M chemicals on (ChEMBL)[https://www.ebi.ac.uk/chembl/] are used to evaluate the optmized model architecture built from the small dataset (the parameters for larger dataset will be tuned accordingly). 
 
 
