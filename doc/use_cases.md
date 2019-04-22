@@ -20,7 +20,7 @@ Achieve robust and efficient clustering and embedding of high dimensional chemic
 ## Components  
 
 ### Data Cleaning
-Generate features using existing packages like *_RDKit_*, and select those based on both data disctribution and domain knowledges
+Generate features using existing packages like [*_RDKit_*](https://www.rdkit.org/), and select those based on both data disctribution and domain knowledges
 
 ### Embedding Layers
 Autoencoder neural network to reduce dimension of the given dataset
@@ -36,6 +36,6 @@ and the combination between the autoencoder and the k-mean method.
 A small synthetic dataset that contains 100+ feature and 1000+ data points is used to estabulish a valid model. The model could be evaluated by the autoencoder loss and the clustering impurity. 
 
 2. Larger unlabeled dataset
-1.8M chemicals on (ChEMBL)[https://www.ebi.ac.uk/chembl/] are used to evaluate the optmized model architecture built from the small dataset (the parameters for larger dataset will be tuned accordingly). 
+1.8M chemicals on [*_ChEMBL_*](https://www.ebi.ac.uk/chembl/) are used to evaluate the optmized model architecture built from the small dataset (the parameters for larger dataset will be tuned accordingly). 
 
 
