@@ -2,8 +2,12 @@ name: deepchembed
 channels:
   - defaults
 dependencies:
+  - certifi=2019.3.9
   - pip=19.0.3
   - python=3.6.8
+  - setuptools=41.0.0
+  - sqlite=3.28.0
+  - wheel=0.33.1
   - pip:
     - keras==2.2.4
     - matplotlib==3.0.3
