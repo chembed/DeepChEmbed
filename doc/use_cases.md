@@ -2,9 +2,13 @@
 
 ## Background  
 Clustering a set of molecules into different groups based on their molecular properties is very useful to establish   
-understanding of how features are contributing to the separation. Good separation of chemical property is fundamental   
+understanding of how features are related to the separation. Good separation of chemical property is fundamental   
 to data reprentation and visualization.   
-Performances of common clustering methods is highly dependent on the input data. 
+Performances of common clustering methods is highly dependent on the input data. Dimensionality reduction (DR) is  
+often applied to map the high-dimensional data into clustering-friendly space to allow for easier separation. Compared  
+to linear DR methods (e.g. PCA, CCA), deep neural networks has demonstrated its power in nonlinear mapping of high-  
+dimensional domain into reduced-dimensional latent spaces. The latent representation of data can then be used as  
+input for clustering tasks.  
 
 ## Objectives  
 
