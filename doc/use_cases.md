@@ -15,12 +15,14 @@ which optimize on both the representation learning and the clustering.
 
 ## Objectives  
 
-Achieve robust and efficient clustering and embedding of high dimensional chemical datasets (e.g, ChEMBL with 1.8M chemicals), pre-filtered with domain knowledge, *_e.g._*, bio-degration or molecular toxicity.
+Achieve robust and efficient embedding and clustering of high dimensional chemical datasets (e.g, ChEMBL with 1.8M chemicals),   
+pre-filtered with domain knowledge, *_e.g._*, bio-degration or molecular toxicity.
 
 ## Components  
 
 ### Data Cleaning
-Generate features using existing packages like [*_RDKit_*](https://www.rdkit.org/), and select those based on both data disctribution and domain knowledges
+Generate features using existing packages like [*_RDKit_*](https://www.rdkit.org/), and select those based on both feature disctribution  
+and domain knowledges
 
 ### Embedding Layers
 Autoencoder neural network to reduce dimension of the given dataset
@@ -29,13 +31,14 @@ Autoencoder neural network to reduce dimension of the given dataset
 K-mean clustering algorithm or other unsupervised/supervised clustering methods to the latent space
 
 ### Validation  
-Evaluate the clustering result by the loss function of the autoencoder, the convergence of clustering (K-mean) method  
-and the combination between the autoencoder and the k-mean method.
+Evaluate the clustering result by the combination of reconstruction loss of autoencoder, the convergence of clustering (K-mean) method.
      
 1. Smaller synthetic dataset with labels
-A small synthetic dataset that contains 100+ feature and 1000+ data points is used to estabulish a valid model. The model could be evaluated by the autoencoder loss and the clustering impurity. 
+A small synthetic dataset that contains 100+ feature and 1000+ data points is used to estabulish a valid model. The model could be evaluated  
+by the autoencoder loss and the clustering impurity. 
 
 2. Larger unlabeled dataset
-1.8M chemicals on [*_ChEMBL_*](https://www.ebi.ac.uk/chembl/) are used to evaluate the optmized model architecture built from the small dataset (the parameters for larger dataset will be tuned accordingly). 
+1.8M chemicals on [*_ChEMBL_*](https://www.ebi.ac.uk/chembl/) are used to evaluate the optmized model architecture built from   
+the small dataset (the parameters for larger dataset will be tuned accordingly). 
 
 
