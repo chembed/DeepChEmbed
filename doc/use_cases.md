@@ -20,7 +20,7 @@ Achieve robust and efficient embedding and clustering of high dimensional chemic
 
 ## Components  
 
-### Hign Dimemsional Data Generation
+### Hign Dimemsional Feature Generation
 Generate features using existing packages like [_RDKit_](https://www.rdkit.org/), and select those based on both feature disctribution and domain knowledges
 
 ### Embedding Layers
