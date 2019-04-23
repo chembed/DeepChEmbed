@@ -60,6 +60,6 @@ __DeepChEmbed__ is an open source python package that aims to combine representa
   </tr>
     <tr>
     <td>Seaborn</td>
-    <td>0.8.0</td>
+    <td>0.9.0</td>
   </tr>
 </table>
