@@ -58,4 +58,8 @@ __DeepChEmbed__ is an open source python package that aims to combine representa
     <td>Matplotlib</td>
     <td>3.0.3</td>
   </tr>
+    <tr>
+    <td>Seaborn</td>
+    <td>0.8.0</td>
+  </tr>
 </table>
