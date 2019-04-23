@@ -3,20 +3,21 @@
 ## Background  
 Clustering a set of molecules into different groups based on their molecular properties is very useful to establish   
 understanding of how features are related to the separation. Good separation of chemical property is fundamental   
-to data reprentation and visualization.   
+to data reprentation and visualization.
+
 Performances of common clustering methods is highly dependent on the input data. Dimensionality reduction (DR) is  
 often applied to map the high-dimensional data into clustering-friendly space to allow for easier separation. Compared  
 to linear DR methods (e.g. PCA, CCA), deep neural networks has demonstrated its power in nonlinear mapping of high-  
 dimensional domain into reduced-dimensional latent spaces. The latent representation of data can then be used as  
-input for clustering tasks.  
+input for clustering tasks.
+
 Combining deep neural network (DNN) based DR and K-means clustering would require a two-phase training procedure  
 which optimize on both the representation learning and the clustering. 
 
 
 ## Objectives  
 
-Achieve robust and efficient embedding and clustering of high dimensional chemical datasets (e.g, ChEMBL with 1.8M chemicals),   
-pre-filtered with domain knowledge, *_e.g._*, bio-degration or molecular toxicity.
+Achieve robust and efficient embedding and clustering of high dimensional chemical datasets (e.g, ChEMBL with 1.8M chemicals),  pre-filtered with domain knowledge, *_e.g._*, bio-degration or molecular toxicity.
 
 ## Components  
 
