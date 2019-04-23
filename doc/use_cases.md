@@ -20,7 +20,7 @@ pre-filtered with domain knowledge, *_e.g._*, bio-degration or molecular toxicit
 
 ## Components  
 
-### Data Cleaning
+### Hign Dimemsional Data Generation
 Generate features using existing packages like [*_RDKit_*](https://www.rdkit.org/), and select those based on both feature disctribution  
 and domain knowledges
 
@@ -34,8 +34,7 @@ K-mean clustering algorithm or other unsupervised/supervised clustering methods 
 Evaluate the clustering result by the combination of reconstruction loss of autoencoder, the convergence of clustering (K-mean) method.
      
 1. Smaller synthetic dataset with labels
-A small synthetic dataset that contains 100+ feature and 1000+ data points is used to estabulish a valid model. The model could be evaluated  
-by the autoencoder loss and the clustering impurity. 
+A small synthetic dataset that contains 100+ feature and 1000+ data points is used to estabulish a valid model. The model could be evaluated by the autoencoder loss and the clustering impurity. 
 
 2. Larger unlabeled dataset
 1.8M chemicals on [*_ChEMBL_*](https://www.ebi.ac.uk/chembl/) are used to evaluate the optmized model architecture built from   
