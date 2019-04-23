@@ -24,13 +24,38 @@ __DeepChEmbed__ is an open source python package that aims to combine representa
 ### Configuration:
 
 #### Pre-requirements:
-|             |        |
-|:------------|--------|
-|Python       | 3.6    |
-|Conda        | 4.6.8  |
-|Numpy        | 1.16.3 |
-|Pandas       | 0.24.2 |
-|Keras        | 2.2.4  |
-|Matplotlib   | 3.0.3  |
-|Scikit-learn | 0.20.3 |
-|Tensorflow   | 1.13.1 |
+
+<table>
+  <tr>
+    <td>Python</td>
+    <td>3.6</td>
+  </tr>
+  <tr>
+    <td>Conda</td>
+    <td>4.6.8</td>
+  </tr>
+  <tr>
+    <td>Numpy</td>
+    <td>1.16.3</td>
+  </tr>
+  <tr>
+    <td>Pandas</td>
+    <td>0.24.2</td>
+  </tr>
+  <tr>
+    <td>Keras</td>
+    <td>2.2.4</td>
+  </tr>
+  <tr>
+    <td>Tensorflow</td>
+    <td>1.13.1</td>
+  </tr>
+  <tr>
+    <td>Scikit-learn</td>
+    <td>0.20.3</td>
+  </tr>
+  <tr>
+    <td>Matplotlib</td>
+    <td>3.0.3</td>
+  </tr>
+</table>
