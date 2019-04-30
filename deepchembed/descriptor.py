@@ -1,5 +1,5 @@
 """
-Wrapper Module using other packages to generate molecular descriptors
+Wrapper Module generate molecular descriptors by using other packages
 """
 
 import math
@@ -16,11 +16,10 @@ from mordred import Calculator as mdCalc
 import mordred.descriptors as mdDesc
 import mordred.error as mdError
 
-# from rdkit.Chem import ChemicalFeatures
-# from rdkit import RDConfig
 
 class Descriptors(ABC):
     """
+    An abstract class for descriptor computation.
     """
     def __init__(self, SMILES = None):
         """ Descriptor Constructor """
@@ -36,6 +35,10 @@ class Descriptors(ABC):
 
     @abstractmethod
     def compute_all_descriptors(self):
+        pass
+
+    @abstractmethod
+    def batch_compute_all_descriptors(self, SMILES_list):
         pass
 
 
@@ -69,6 +72,23 @@ class rdkitDescriptors(Descriptors):
         desc_dict.update(self.compute_MQN_descriptors())
 
         return desc_dict
+
+    def batch_compute_all_descriptors(self, SMILES_list):
+        """ """
+        assert len(SMILES_list) >= 1
+
+        Molecules = list(map(Chem.MolFromSmiles, SMILES_list))
+        DESC_ENGINE = rdkitDescriptors()
+        DESC_ENGINE.set_molecule(SMILES_list[0])
+        desc_dict = DESC_ENGINE.compute_all_descriptors()
+        desc_df = pd.DataFrame(desc_dict, index=[0])
+
+        for i in range(1,len(Molecules)):
+            DESC_ENGINE.set_molecule(SMILES_list[i])
+            desc_dict = DESC_ENGINE.compute_all_descriptors()
+            desc_df = desc_df.append(pd.DataFrame(desc_dict, index=[i]))
+
+        return desc_df
 
     def compute_properties(self, feature_name = None):
         """
@@ -120,7 +140,6 @@ class rdkitDescriptors(Descriptors):
     def compute_MOE_descriptors(self):
         """
         compute the MOE-type descriptors defined in
-
 
         return decriptors types: floats
         """
@@ -228,7 +247,8 @@ class mordredDescriptors(Descriptors):
 
     def batch_compute_all_descriptors(self, SMILES_list):
         """  """
-        Molecules = map(Chem.MolFromSmiles, SMILES_list)
+        assert len(SMILES_list) >= 1
+        Molecules = list(map(Chem.MolFromSmiles, SMILES_list))
         desc_df = self.DESC_ENGINE.pandas(Molecules)
         desc_df = desc_df.applymap(self._convert_mdError_to_na)
         return desc_df
