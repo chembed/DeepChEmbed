@@ -22,7 +22,7 @@ informed by domain knowledge, *_e.g._*, bio-degration or molecular toxicity.
 ## Components  
 
 ### Hign Dimemsional Feature Generation and Selection  
-Generate reproducible features using existing packages like [_RDKit_](https://www.rdkit.org/), and select those based on both  
+Generate reproducible features using existing packages like [_RDKit_](https://www.rdkit.org/) and [_Mordred_](https://pypi.org/project/mordred/), and select those based on both  
 feature disctribution and domain knowledges
 
 ### Baseline Clustering Tasks  
