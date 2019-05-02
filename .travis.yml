@@ -21,12 +21,14 @@ before_install:
 install:
   # Source conda environment:
   - yes|conda env create -f environment.yml>/dev/null
-  - conda activate deepchembed
+  - source activate deepchembed
   # install coverage
   - pip install coverage
   - pip install python-coveralls
 
-script: pytest
+script: 
+  - source activate deepchembed
+  - pytest
 
 # generate a coverage report to send to back to user
 after_success:
