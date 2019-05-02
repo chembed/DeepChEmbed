@@ -38,7 +38,8 @@ class Descriptors(ABC):
         pass
 
     @abstractmethod
-    def batch_compute_all_descriptors(self, SMILES_list):
+    def batch_compute_all_descriptors(SMILES_list):
+        """ must implemented as @static methods"""
         pass
 
 
@@ -73,7 +74,8 @@ class rdkitDescriptors(Descriptors):
 
         return desc_dict
 
-    def batch_compute_all_descriptors(self, SMILES_list):
+    @staticmethod
+    def batch_compute_all_descriptors(SMILES_list):
         """ """
         assert len(SMILES_list) >= 1
 
@@ -245,15 +247,20 @@ class mordredDescriptors(Descriptors):
 
         return desc_list
 
-    def batch_compute_all_descriptors(self, SMILES_list):
+    @staticmethod
+    def batch_compute_all_descriptors(SMILES_list):
         """  """
         assert len(SMILES_list) >= 1
+        DESC_ENGINE = mordredDescriptors.DESC_ENGINE
+        na_coverter = mordredDescriptors._convert_mdError_to_na
+        
         Molecules = list(map(Chem.MolFromSmiles, SMILES_list))
-        desc_df = self.DESC_ENGINE.pandas(Molecules)
-        desc_df = desc_df.applymap(self._convert_mdError_to_na)
+        desc_df = DESC_ENGINE.pandas(Molecules)
+        desc_df = desc_df.applymap(na_coverter)
         return desc_df
 
-    def _convert_mdError_to_na(self, x):
+    @staticmethod
+    def _convert_mdError_to_na(x):
         """ """
         if type(x) == mdError.Missing:
             return np.nan
