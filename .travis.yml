@@ -14,14 +14,15 @@ before_install:
     - chmod +x miniconda.sh
     - ./miniconda.sh -b -p "$PWD/miniconda/"
     - export PATH="$PWD/miniconda/bin/:$PATH"
-    - yes|conda update conda>/dev/null
+    - yes|conda update conda > /dev/null
 
 
 # set up enviroment
 install:
   # Source conda environment:
-  - yes|conda env create -f environment.yml
+  - yes|conda env create -f environment.yml > /dev/null
   - source activate deepchembed
+  - conda list
   # install coverage
   - pip install coverage
   - pip install python-coveralls
