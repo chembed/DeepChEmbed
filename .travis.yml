@@ -27,8 +27,7 @@ install:
   - pip install python-coveralls
 
 script: 
-  - source activate deepchembed
-  - pytest
+  - py.test -s --pyargs deepchembed --cov-report term-missing --cov=deepchembed --cov-config .coveragerc
 
 # generate a coverage report to send to back to user
 after_success:
