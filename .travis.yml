@@ -14,7 +14,8 @@ install:
   - pip install coverage
   - pip install python-coveralls
   - pip install -r requirements.txt
-
+  - conda install -c conda-forge rdkit
+  - conda install -c rdkit -c mordred-descriptor mordred
 
 # generate a coverage report to send to back to user
 after_success:
