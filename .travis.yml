@@ -20,7 +20,7 @@ before_install:
 # set up enviroment
 install:
   # Source conda environment:
-  - yes|conda env create -f environment.yml>/dev/null
+  - yes|conda env create -f environment.yml
   - source activate deepchembed
   # install coverage
   - pip install coverage
