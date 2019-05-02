@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-clean_out_of_bound(bio_deg):
+def clean_out_of_bound(bio_deg):
     """
     clean the bio degradation part, if negative, treat as 0
     if above 100, treat as 100
