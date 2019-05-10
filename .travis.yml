@@ -20,9 +20,18 @@ before_install:
 # set up enviroment
 install:
   # Source conda environment:
-  - yes|conda env create -f environment.yml > /dev/null
-  - source activate deepchembed
-  - conda list
+  #- yes|conda env create -f environment.yml > /dev/null
+  #- source activate deepchembed
+  - yes|conda install numpy==1.16.3
+  - yes|conda install pandas==0.24.2
+  - yes|conda install scipy==1.2.1
+  - yes|conda install scikit-learn==0.20.3
+  - yes|conda install seaborn==0.9.0
+  - yes|conda install ipykernel=5.1.0
+  - yes|conda install tensorflow==1.13.1
+  - yes|conda install keras==2.2.4
+  - yes|conda install -c conda-forge rdkit=2019.03.1
+  - yes|conda install -c rdkit -c mordred-descriptor mordred=1.1.1
   # install coverage
   - pip install coverage
   - pip install python-coveralls
