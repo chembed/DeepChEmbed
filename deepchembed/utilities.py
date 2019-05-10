@@ -66,4 +66,28 @@ def dedup_input_cols(df):
     """
     return columns that has distinct input
     """
-    return df.loc[:,feat_int.nunique()>1]
+    return df.loc[:,df.nunique()>1]
+
+def assign_class(num, cuts):
+    """
+    num: int/float target to be assigned to classes
+    cuts: list(of float/int) or np.ndarray to be used as cut-edges between
+        classes, no start/end value
+    """
+    assert len(cuts) >0; "cuts can not be empty"
+    i = 0
+    while i < len(cuts):
+        if num <= cuts[i]:
+            return i
+        i+=1
+    return len(cuts)
+
+def divide_classes(lst, cuts):
+    """
+    lst: pd.dataframe(int/float)
+    cuts: list(of float/int) or np.ndarray to be used as cut-edges between
+        classes, no start/end value
+    """
+    cls = [assign_class(num,cuts) for num in lst]
+    return pd.DataFrame(cls)
+
