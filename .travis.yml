@@ -10,11 +10,11 @@ branches:
 # creating conda environment:
 before_install:
     #install miniconda
-    - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
-    - chmod +x miniconda.sh
-    - ./miniconda.sh -b -p "$PWD/miniconda/"
-    - export PATH="$PWD/miniconda/bin/:$PATH"
-    - yes|conda update conda > /dev/null
+    #- wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+    #- chmod +x miniconda.sh
+    #- ./miniconda.sh -b -p "$PWD/miniconda/"
+    #- export PATH="$PWD/miniconda/bin/:$PATH"
+    #- yes|conda update conda > /dev/null
 
 
 # set up enviroment
@@ -22,15 +22,15 @@ install:
   # Source conda environment:
   #- yes|conda env create -f environment.yml > /dev/null
   #- source activate deepchembed
-  - yes|conda install numpy==1.16.3 > /dev/null
-  - yes|conda install scipy==1.2.1 > /dev/null
-  - yes|conda install scikit-learn==0.20.3 > /dev/null
-  - yes|conda install seaborn==0.9.0 > /dev/null
-  - yes|conda install ipykernel=5.1.0 > /dev/null
-  - yes|conda install tensorflow==1.13.1 > /dev/null
-  - yes|conda install keras==2.2.4 > /dev/null
-  - yes|conda install -c conda-forge rdkit=2019.03.1 > /dev/null 
-  - yes|conda install -c rdkit -c mordred-descriptor mordred=1.1.1 > /dev/null
+#   - yes|conda install numpy==1.16.3 > /dev/null
+#   - yes|conda install scipy==1.2.1 > /dev/null
+#   - yes|conda install scikit-learn==0.20.3 > /dev/null
+#   - yes|conda install seaborn==0.9.0 > /dev/null
+#   - yes|conda install ipykernel=5.1.0 > /dev/null
+#   - yes|conda install tensorflow==1.13.1 > /dev/null
+#   - yes|conda install keras==2.2.4 > /dev/null
+#   - yes|conda install -c conda-forge rdkit=2019.03.1 > /dev/null 
+#   - yes|conda install -c rdkit -c mordred-descriptor mordred=1.1.1 > /dev/null
   - pip install pandas > /dev/null
   # install coverage
   - pip install coverage
