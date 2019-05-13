@@ -22,7 +22,7 @@ before_install:
 install:
   # Source conda environment:
   #- yes|conda env create -f environment.yml > /dev/null
-  #- source activate deepchembed
+    - source activate base
 #   - yes|conda install numpy==1.16.3 > /dev/null
 #   - yes|conda install scipy==1.2.1 > /dev/null
 #   - yes|conda install scikit-learn==0.20.3 > /dev/null
