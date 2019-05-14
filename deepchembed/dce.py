@@ -1,3 +1,7 @@
+"""
+DeepChEmbed Models
+"""
+
 from dimreducer import DimReducer
 from classifier import Classifier
 
