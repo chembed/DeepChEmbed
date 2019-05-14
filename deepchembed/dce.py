@@ -1,6 +1,6 @@
-# import keras
 
-class DCEModel():
+
+class DCE():
     """
     class to build a deep chemical embedding model
     """
@@ -27,22 +27,4 @@ class DCEModel():
     def set_classifier(self, classifier):
         """ """
         self.classifier = classifier
-        return
-
-class DimReducer():
-    """
-
-    """
-
-    def __init__(self):
-
-        return
-
-class Classifier():
-    """
-
-    """
-
-    def __init__(self):
-
         return
