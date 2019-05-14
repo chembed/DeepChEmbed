@@ -9,6 +9,7 @@ dependencies:
   - python=3.6.8
   - setuptools=41.0.0
   - sqlite=3.28.0
+  - notebook=5.7.8
   - wheel=0.33.1
   - tensorflow==1.13.1
   - keras==2.2.4
