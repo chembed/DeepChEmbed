@@ -1,3 +1,5 @@
+from dimreducer import DimReducer
+from classifier import Classifier
 
 
 class DCE():
@@ -21,10 +23,12 @@ class DCE():
 
     def set_dim_reducer(self, dim_reducer):
         """ """
+        assert isinstance(dim_reducer, DimReducer)
         self.dim_reducer = dim_reducer
         return
 
     def set_classifier(self, classifier):
         """ """
+        assert isinstance(classifier, Classifier)
         self.classifier = classifier
         return
