@@ -1,3 +1,7 @@
+"""
+Wrapper Module to integrate the models to reduce the intial feature dimensions
+"""
+
 import pandas as pd
 import numpy as np
 
@@ -16,9 +20,9 @@ class DimReducer(ABC):
     def __init__(self, input_size, output_size):
         self.input_size  = input_size
         self.output_size = output_size
+        self.model = None
 
         return
-
 
 class DeepAutoEncoder(DimReducer):
     """
@@ -40,7 +44,6 @@ class DeepAutoEncoder(DimReducer):
         self.set_dims(dims)
 
         self.act      = act
-        self.model    = None
 
         return
 

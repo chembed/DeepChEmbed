@@ -1,5 +1,5 @@
 """
-Wrapper Module generate molecular descriptors by using other packages
+Wrapper Module to generate molecular descriptors by using other packages
 """
 
 import math
@@ -253,7 +253,7 @@ class mordredDescriptors(Descriptors):
         assert len(SMILES_list) >= 1
         DESC_ENGINE = mordredDescriptors.DESC_ENGINE
         na_coverter = mordredDescriptors._convert_mdError_to_na
-        
+
         Molecules = list(map(Chem.MolFromSmiles, SMILES_list))
         desc_df = DESC_ENGINE.pandas(Molecules)
         desc_df = desc_df.applymap(na_coverter)
