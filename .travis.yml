@@ -15,7 +15,7 @@ before_install:
     - chmod +x miniconda.sh
     - ./miniconda.sh -b -p "$PWD/miniconda/"
     - export PATH="$PWD/miniconda/bin/:$PATH"
-    - conda update --yes conda
+    - yes|conda update conda>/dev/null
 
 # set up enviroment
 install:
