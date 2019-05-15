@@ -38,11 +38,11 @@ install:
   - pip install coverage
   - pip install python-coveralls
 
-before_script:
-  - source activate deepchembed
+# before_script:
+#   - source activate deepchembed
 
 script: 
-  - py.test -s --pyargs deepchembed 
+  - PYTHONPATH=. py.test -s --pyargs deepchembed 
   #--cov-report term-missing --cov=deepchembed --cov-config .coveragerc
 
 # generate a coverage report to send to back to user
