@@ -35,6 +35,7 @@ install:
 #   - yes|conda install -c rdkit -c mordred-descriptor mordred=1.1.1 > /dev/null
   #- pip install pandas > /dev/null
   # install coverage
+  - pip install -U pytest
   - pip install coverage
   - pip install python-coveralls
 
