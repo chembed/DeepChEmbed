@@ -16,14 +16,14 @@ before_install:
     - ./miniconda.sh -b -p "$PWD/miniconda/"
     - export PATH="$PWD/miniconda/bin/:$PATH"
     - yes | conda update conda  > /dev/null
-    - yes | conda install python=3.6
+    - yes | conda install python=3.6 > > /dev/null
     #- yes | conda install pip > /dev/null
 
 # set up enviroment
 install:
   # Source conda environment:
-  #- yes|conda env create -f environment.yml > /dev/null
-#     - source activate base
+    - yes|conda env create -f environment.yml > /dev/null
+    - source activate deepchembed
 #   - yes|conda install numpy==1.16.3 > /dev/null
 #   - yes|conda install scipy==1.2.1 > /dev/null
 #   - yes|conda install scikit-learn==0.20.3 > /dev/null
@@ -33,10 +33,13 @@ install:
 #   - yes|conda install keras==2.2.4 > /dev/null
 #   - yes|conda install -c conda-forge rdkit=2019.03.1 > /dev/null 
 #   - yes|conda install -c rdkit -c mordred-descriptor mordred=1.1.1 > /dev/null
-  - pip install pandas > /dev/null
+  #- pip install pandas > /dev/null
   # install coverage
   - pip install coverage
   - pip install python-coveralls
+
+before_script:
+  - source activate deepchembed
 
 script: 
   - py.test -s --pyargs deepchembed 
