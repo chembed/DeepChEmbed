@@ -16,10 +16,10 @@ before_install:
     - ./miniconda.sh -b -p "$PWD/miniconda/"
     - export PATH="$PWD/miniconda/bin/:$PATH"
     - yes|conda update conda>/dev/null
+    - yes | conda install pip > > /dev/null
 
 # set up enviroment
 install:
-   - yes | conda install pip > > /dev/null
   # Source conda environment:
   #- yes|conda env create -f environment.yml > /dev/null
 #     - source activate base
