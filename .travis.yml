@@ -16,8 +16,6 @@ before_install:
     - ./miniconda.sh -b -p "$PWD/miniconda/"
     - export PATH="$PWD/miniconda/bin/:$PATH"
     - yes | conda update conda  > /dev/null
-    #- yes | conda install python=3.6 > /dev/null
-    #- yes | conda install pip > /dev/null
 
 # set up enviroment
 install:
