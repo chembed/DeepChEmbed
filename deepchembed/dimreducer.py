@@ -14,7 +14,7 @@ from keras.layers.normalization import BatchNormalization
 
 class DimReducer(ABC):
     """
-
+    Base class of DimReducer
     """
 
     def __init__(self, input_size, output_size):

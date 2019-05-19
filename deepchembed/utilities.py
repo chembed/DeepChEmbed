@@ -20,19 +20,19 @@ def clean_out_of_bound(bio_deg):
             i = 100
         cleaned_bio.append(i)
     return pd.Series(cleaned_bio)
-                                             
+
 
 def bi_class(raw, boundary):
     """
     divide raw input into two classes, based on selected boundary
     """
     bi_class = pd.Series([0 if i < boundary else 1 for i in raw])
-    return bi_class    
+    return bi_class
 
-    
+
 def cluster_acc(y_true, y_predict):
     """
-    Calculate clustering accuracy. 
+    Calculate clustering accuracy.
     ----
     Arguments
         y_true: true labels, numpy.ndarray with shape (n_samples,)
@@ -46,17 +46,17 @@ def cluster_acc(y_true, y_predict):
     compare = y_true == y_predict
     accuarte, count = np.unique(comp, return_counts=True)
     total_evaluation = dict(zip(accuarte, count))
-    return total_evaluation[True]/sum(total.values())   
+    return total_evaluation[True]/sum(total.values())
 
 
 def check_dtypes_count(df):
     """
-    Quickly check for unique data types in a dataframe and return 
+    Quickly check for unique data types in a dataframe and return
     counts for each type.
     ----
     Args:
         pd.dataframe
-    ----    
+    ----
     Return
         dtypes and counts: tuple of two arrays
     """
@@ -75,12 +75,13 @@ def assign_class(num, cuts):
         classes, no start/end value
     """
     assert len(cuts) >0; "cuts can not be empty"
-    i = 0
-    while i < len(cuts):
-        if num <= cuts[i]:
+
+    for i in range(len(cuts)):
+        if num <=cuts[i]:
             return i
-        i+=1
-    return len(cuts)
+
+    return i+1
+
 
 def divide_classes(lst, cuts):
     """
@@ -90,4 +91,3 @@ def divide_classes(lst, cuts):
     """
     cls = [assign_class(num,cuts) for num in lst]
     return pd.DataFrame(cls)
-
