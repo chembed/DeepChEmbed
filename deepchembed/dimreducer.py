@@ -81,7 +81,7 @@ class DeepAutoEncoder(DimReducer):
                               name='decoder_%d' % i)(X_decoder)
 
         X_output = Dense(self.input_size, activation=self.act,
-                          name='output')(X_decoder)
+                          name='decoder_output')(X_decoder)
 
         self.model = Model(inputs=X_input, outputs=X_output)
 
