@@ -15,38 +15,6 @@ class Cluster(ABC):
 
         return
 
-class KMeans(Cluster):
-    """
-    Wrapper class utilizing the sklean KMeans class
-    """
-
-    def bulid_kmeans_cluster(self, init='k-means++', tol=1e-6):
-        """"""
-        self.model = sklean_KMeans(n_clusters=self.n_clusters,
-                                   init=init, tol=tol)
-        return
-
-    def train_model(self, input_feature, true_labels=None, get_metric=True,
-                    print_metric=True):
-
-        """ """
-        self.model.fit(input_feature)
-
-        avaiable_metrics = {}
-        if(get_metric):
-            avaiable_metrics.update(\
-                self.no_label_metrics(input_feature, self.model.labels_,
-                                      print_metric))
-            if true_labels is not None:
-                print('')
-                avaiable_metrics.update(\
-                    self.true_label_metrics(true_labels, self.model.labels_,
-                                            print_metric))
-        else:
-            return self.model.labels_
-
-        return (self.model.labels_, avaiable_metrics)
-
     @staticmethod
     def no_label_metrics(input_feature, assigned_label, print_metric,
                          metric='euclidean'):
@@ -99,6 +67,39 @@ class KMeans(Cluster):
                   % true_label_metrics['fowlkes_mallows_score'])
 
         return true_label_metrics
+
+class KMeans(Cluster):
+    """
+    Wrapper class utilizing the sklean KMeans class
+    """
+
+    def bulid_kmeans_cluster(self, init='k-means++', tol=1e-6):
+        """"""
+        self.model = sklean_KMeans(n_clusters=self.n_clusters,
+                                   init=init, tol=tol)
+        return
+
+    def train_model(self, input_feature, true_labels=None, get_metric=True,
+                    print_metric=True):
+
+        """ """
+        self.model.fit(input_feature)
+
+        avaiable_metrics = {}
+        if(get_metric):
+            avaiable_metrics.update(\
+                self.no_label_metrics(input_feature, self.model.labels_,
+                                      print_metric))
+            if true_labels is not None:
+                print('')
+                avaiable_metrics.update(\
+                    self.true_label_metrics(true_labels, self.model.labels_,
+                                            print_metric))
+        else:
+            return self.model.labels_
+
+        return (self.model.labels_, avaiable_metrics)
+
 
 class KMeansLayer(Layer):
     """
