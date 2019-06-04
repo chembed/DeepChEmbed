@@ -222,11 +222,25 @@ class rdkitDescriptors(Descriptors):
 
         return MQN_dict
 
+    @staticmethod
+    def batch_compute_auto_2D_coorelation(SMILES_list):
+        """ """
+        assert len(SMILES_list) >= 1
+
+        Molecules = list(map(Chem.MolFromSmiles, SMILES_list))
+        DESC_ENGINE = rdkitDescriptors()
+        autocorr2d = []
+        for i in range(len(Molecules)):
+            DESC_ENGINE.set_molecule(SMILES_list[i])
+            autocorr2d.append(DESC_ENGINE.compute_auto_2D_coorelation())
+
+        return np.array(autocorr2d)
+
     def compute_auto_2D_coorelation(self):
         """wrapper function for same function in rdkit"""
         return rdDesc.CalcAUTOCORR2D(self.Molecule)
 
-    def compute_Morgan_fingerprint(self, radius=2, nBits=2048, use_features=False):
+    def compute_fingerprint(self, fp_type, radius=2, nBits=2048, use_features=False):
         """  """
         assert type(self.Molecule) == Chem.rdchem.Mol
         fp = AllChem.GetMorganFingerprintAsBitVect(self.Molecule, radius, nBits=nBits,
