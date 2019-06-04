@@ -64,55 +64,49 @@ class rdkitDescriptors(Descriptors):
 
     """
 
-    def compute_all_descriptors(self):
+    def compute_all_descriptors(self,desc_type='all'):
         """ compute all descriptors avaiable from the rdkit package """
+        assert desc_type in ['all', 'int','float']
+
         desc_dict = {}
-        desc_dict.update(self.compute_properties())
-        desc_dict.update(self.compute_connectivity_and_shape_indexes())
-        desc_dict.update(self.compute_MOE_descriptors())
-        desc_dict.update(self.compute_MQN_descriptors())
 
-        return desc_dict
-
-    def compute_int_descriptors(self):
-        """ compute all int descriptors avaiable from the rdkit package """
-        desc_dict = {}
-        desc_dict.update(self.compute_properties(\
-            ['lipinskiHBA', 'lipinskiHBD', 'NumRotatableBonds', 'NumRings',
-             'NumHeteroatoms', 'NumAmideBonds','NumAromaticRings', 'NumHBA',
-             'NumAliphaticRings', 'NumSaturatedRings', 'NumHeterocycles',
-             'NumAromaticHeterocycles', 'NumSaturatedHeterocycles', 'NumHBD',
-             'NumAliphaticHeterocycles', 'NumSpiroAtoms', 'NumBridgeheadAtoms',
-             'NumAtomStereoCenters','NumUnspecifiedAtomStereoCenters']))
-        desc_dict.update(self.compute_MQN_descriptors())
-
-        return desc_dict
-
-    def compute_float_descriptors(self):
-        """ compute all floats descriptors avaiable from the rdkit package """
-        desc_dict = {}
-        desc_dict.update(self.compute_properties(\
-            ['exactmw','FractionCSP3','labuteASA','tpsa',
-             'CrippenClogP','CrippenMR']))
-        desc_dict.update(self.compute_connectivity_and_shape_indexes())
-        desc_dict.update(self.compute_MOE_descriptors())
+        if desc_type == 'all':
+            desc_dict.update(self.compute_properties())
+            desc_dict.update(self.compute_connectivity_and_shape_indexes())
+            desc_dict.update(self.compute_MOE_descriptors())
+            desc_dict.update(self.compute_MQN_descriptors())
+        elif desc_type == 'int':
+            desc_dict.update(self.compute_properties(\
+                ['lipinskiHBA', 'lipinskiHBD', 'NumRotatableBonds', 'NumRings',
+                 'NumHeteroatoms', 'NumAmideBonds','NumAromaticRings', 'NumHBA',
+                 'NumAliphaticRings', 'NumSaturatedRings', 'NumHeterocycles',
+                 'NumAromaticHeterocycles', 'NumSaturatedHeterocycles', 'NumHBD',
+                 'NumAliphaticHeterocycles', 'NumSpiroAtoms', 'NumBridgeheadAtoms',
+                 'NumAtomStereoCenters','NumUnspecifiedAtomStereoCenters']))
+            desc_dict.update(self.compute_MQN_descriptors())
+        elif desc_type == 'float':
+            desc_dict.update(self.compute_properties(\
+                ['exactmw','FractionCSP3','labuteASA','tpsa',
+                 'CrippenClogP','CrippenMR']))
+            desc_dict.update(self.compute_connectivity_and_shape_indexes())
+            desc_dict.update(self.compute_MOE_descriptors())
 
         return desc_dict
 
     @staticmethod
-    def batch_compute_all_descriptors(SMILES_list):
+    def batch_compute_all_descriptors(SMILES_list, desc_type='all'):
         """ """
         assert len(SMILES_list) >= 1
 
         Molecules = list(map(Chem.MolFromSmiles, SMILES_list))
         DESC_ENGINE = rdkitDescriptors()
         DESC_ENGINE.set_molecule(SMILES_list[0])
-        desc_dict = DESC_ENGINE.compute_all_descriptors()
+        desc_dict = DESC_ENGINE.compute_all_descriptors(desc_type)
         desc_df = pd.DataFrame(desc_dict, index=[0])
 
         for i in range(1,len(Molecules)):
             DESC_ENGINE.set_molecule(SMILES_list[i])
-            desc_dict = DESC_ENGINE.compute_all_descriptors()
+            desc_dict = DESC_ENGINE.compute_all_descriptors(desc_type)
             desc_df = desc_df.append(pd.DataFrame(desc_dict, index=[i]))
 
         return desc_df
