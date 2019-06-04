@@ -74,6 +74,31 @@ class rdkitDescriptors(Descriptors):
 
         return desc_dict
 
+    def compute_int_descriptors(self):
+        """ compute all int descriptors avaiable from the rdkit package """
+        desc_dict = {}
+        desc_dict.update(self.compute_properties(\
+            ['lipinskiHBA', 'lipinskiHBD', 'NumRotatableBonds', 'NumRings',
+             'NumHeteroatoms', 'NumAmideBonds','NumAromaticRings', 'NumHBA',
+             'NumAliphaticRings', 'NumSaturatedRings', 'NumHeterocycles',
+             'NumAromaticHeterocycles', 'NumSaturatedHeterocycles', 'NumHBD',
+             'NumAliphaticHeterocycles', 'NumSpiroAtoms', 'NumBridgeheadAtoms',
+             'NumAtomStereoCenters','NumUnspecifiedAtomStereoCenters']))
+        desc_dict.update(self.compute_MQN_descriptors())
+
+        return desc_dict
+
+    def compute_float_descriptors(self):
+        """ compute all floats descriptors avaiable from the rdkit package """
+        desc_dict = {}
+        desc_dict.update(self.compute_properties(\
+            ['exactmw','FractionCSP3','labuteASA','tpsa',
+             'CrippenClogP','CrippenMR']))
+        desc_dict.update(self.compute_connectivity_and_shape_indexes())
+        desc_dict.update(self.compute_MOE_descriptors())
+
+        return desc_dict
+
     @staticmethod
     def batch_compute_all_descriptors(SMILES_list):
         """ """
