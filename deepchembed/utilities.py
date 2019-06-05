@@ -30,24 +30,6 @@ def bi_class(raw, boundary):
     return bi_class
 
 
-def cluster_acc(y_true, y_predict):
-    """
-    Calculate clustering accuracy.
-    ----
-    Arguments
-        y_true: true labels, numpy.ndarray with shape (n_samples,)
-        y_predict: predicted labels, numpy.ndarray with shape (n_samples,)
-    ----
-    Return
-        accuracy, float, in [0,1]
-    """
-    y_true = y_true.astype(np.int64)
-    assert y_predict.shape[0] == y_true.shape[0]
-    compare = y_true == y_predict
-    accuarte, count = np.unique(comp, return_counts=True)
-    total_evaluation = dict(zip(accuarte, count))
-    return total_evaluation[True]/sum(total.values())
-
 
 def check_dtypes_count(df):
     """
