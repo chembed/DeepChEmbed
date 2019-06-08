@@ -54,7 +54,7 @@ class DeepAutoEncoder(DimReducer):
         self.n_layers = len(dims)*2 - 1
         return
 
-    def build_autoencoder(self, norm=True):
+    def build_model(self, norm=True):
         """ build an autoencoder using keras and tensorflow"""
 
         # input
@@ -87,11 +87,11 @@ class DeepAutoEncoder(DimReducer):
 
         return
 
-    def train_model(self, data_train, norm_featrue=True, compile=False,
+    def train_model(self, data_train, norm_featrue=True, compiled=False,
                     optimizer='adam',loss='mse',epochs=150):
         assert isinstance(self.model, Model)
 
-        if(not compile):
+        if(not compiled):
             self.model.compile(optimizer=optimizer, loss=loss)
 
         if(norm_featrue):
