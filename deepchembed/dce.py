@@ -38,7 +38,7 @@ class DCE():
 
         return
 
-    def train_model(self, data_train, norm_featrue=True, training_prints=True,
+    def train_model(self, data_train, norm_feature=True, training_prints=True,
                     compiled=False, clustering_loss='kld', decoder_loss='mse',
                     clustering_loss_weight=0.5, optimizer='adam'):
         """ """
@@ -50,7 +50,7 @@ class DCE():
                                              1 - clustering_loss_weight],
                                optimizer=optimizer)
 
-        if(norm_featrue):
+        if(norm_feature):
             data_train = normalize(data_train, axis=0, order=2)
 
         # initializing model by using sklean-Kmeans as guess
