@@ -26,10 +26,10 @@ class DCE():
 
         return
 
-    def build_model(self):
+    def build_model(self, norm=True):
         """ """
         autoencoder = DeepAutoEncoder(self.autoencoder_dims)
-        autoencoder.build_model()
+        autoencoder.build_model(norm=norm)
         embeding = autoencoder.model.get_layer(name='embedding_layer').output
         clustering = KMeansLayer(self.n_clusters, alpha=self.alpha,
                                  name='clustering')(embeding)
