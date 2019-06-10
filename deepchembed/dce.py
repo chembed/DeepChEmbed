@@ -55,7 +55,7 @@ class DCE():
 
         # initializing model by using sklean-Kmeans as guess
         kmeans_init = KMeans(n_clusters=2)
-        kmeans_init.bulid_model()
+        kmeans_init.build_model()
         encoder  = Model(inputs=self.model.input,
                          outputs=self.model.get_layer(\
                          name='embedding_layer').output)
