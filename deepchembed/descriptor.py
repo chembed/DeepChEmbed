@@ -10,6 +10,7 @@ import pandas as pd
 from abc import ABC, abstractmethod
 from rdkit import Chem
 from rdkit.Chem import AllChem
+import rdkit.Chem.rdmolops as rdmolops
 import rdkit.Chem.rdMolDescriptors as rdDesc
 import rdkit.Chem.EState.EState_VSA as EState
 from mordred import Calculator as mdCalc
@@ -246,6 +247,16 @@ class rdkitDescriptors(Descriptors):
         fp = AllChem.GetMorganFingerprintAsBitVect(self.Molecule, radius, nBits=nBits,
                                                    useFeatures=use_features)
         return list(fp.ToBinary())
+
+    @staticmethod
+    def batch_compute_rdkit_fingerprints(SMILES_list):
+        """ """
+        assert len(SMILES_list) >= 1
+
+        Molecules = list(map(Chem.MolFromSmiles, SMILES_list))
+        FPs = list(map(lambda x: list(rdmolops.RDKFingerprint(x)), Molecules))
+
+        return np.array(FPs)
 
 class mordredDescriptors(Descriptors):
     """
