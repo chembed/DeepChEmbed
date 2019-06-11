@@ -5,6 +5,7 @@ from dimreducer import DeepAutoEncoder
 from cluster import KMeansLayer
 from cluster import KMeans
 from keras import Model
+from keras import optimizers
 from keras.utils import normalize
 import numpy as np
 
@@ -40,15 +41,24 @@ class DCE():
 
     def train_model(self, data_train, norm_featrue=True, training_prints=True,
                     compiled=False, clustering_loss='kld', decoder_loss='mse',
-                    clustering_loss_weight=0.5, optimizer='adam'):
+                    clustering_loss_weight=0.5,
+                    optimizer='adam', lr=0.001, decay=0.0):
         """ """
         if (not compiled):
             assert clustering_loss_weight <= 1 and clustering_loss_weight >= 0
+
+            if optimizer == 'adam':
+                dce_optimizer = optimizer.Adam(lr=lr,decay=decay)
+            elif optimizer == 'sgd':
+                dce_optimizer = optimizer.sgd(lr=lr,decay=decay)
+            else:
+                raise Exception('Input optimizer was not found')
+
             self.model.compile(loss={'clustering': clustering_loss,
                                      'decoder_output': decoder_loss},
                                loss_weights=[clustering_loss_weight,
                                              1 - clustering_loss_weight],
-                               optimizer=optimizer)
+                               optimizer=dce_optimizer)
 
         if(norm_featrue):
             data_train = normalize(data_train, axis=0, order=2)
