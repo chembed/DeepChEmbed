@@ -48,9 +48,9 @@ class DCE():
             assert clustering_loss_weight <= 1 and clustering_loss_weight >= 0
 
             if optimizer == 'adam':
-                dce_optimizer = optimizer.Adam(lr=lr,decay=decay)
+                dce_optimizer = optimizers.Adam(lr=lr,decay=decay)
             elif optimizer == 'sgd':
-                dce_optimizer = optimizer.sgd(lr=lr,decay=decay)
+                dce_optimizer = optimizers.sgd(lr=lr,decay=decay)
             else:
                 raise Exception('Input optimizer was not found')
 
