@@ -27,9 +27,9 @@ class DCE():
 
         return
 
-    def build_model(self, norm=True):
+    def build_model(self, norm=True, act='relu'):
         """ """
-        autoencoder = DeepAutoEncoder(self.autoencoder_dims)
+        autoencoder = DeepAutoEncoder(self.autoencoder_dims, act)
         autoencoder.build_model(norm=norm)
         embeding = autoencoder.model.get_layer(name='embedding_layer').output
         clustering = KMeansLayer(self.n_clusters, alpha=self.alpha,
@@ -39,7 +39,7 @@ class DCE():
 
         return
 
-    def train_model(self, data_train, norm_featrue=True, training_prints=True,
+    def train_model(self, data_train, norm_feature=True, training_prints=True,
                     compiled=False, clustering_loss='kld', decoder_loss='mse',
                     clustering_loss_weight=0.5,
                     optimizer='adam', lr=0.001, decay=0.0):
@@ -60,12 +60,12 @@ class DCE():
                                              1 - clustering_loss_weight],
                                optimizer=dce_optimizer)
 
-        if(norm_featrue):
+        if(norm_feature):
             data_train = normalize(data_train, axis=0, order=2)
 
         # initializing model by using sklean-Kmeans as guess
         kmeans_init = KMeans(n_clusters=2)
-        kmeans_init.bulid_model()
+        kmeans_init.build_model()
         encoder  = Model(inputs=self.model.input,
                          outputs=self.model.get_layer(\
                          name='embedding_layer').output)
