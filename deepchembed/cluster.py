@@ -73,7 +73,7 @@ class KMeans(Cluster):
     Wrapper class utilizing the sklean KMeans class
     """
 
-    def bulid_model(self, init='k-means++', tol=1e-6):
+    def build_model(self, init='k-means++', tol=1e-6):
         """"""
         self.model = sklean_KMeans(n_clusters=self.n_clusters,
                                    init=init, tol=tol)
