@@ -1,5 +1,8 @@
 import numpy as np
 import pandas as pd
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def clean_out_of_bound(bio_deg):
     """
@@ -73,3 +76,47 @@ def divide_classes(lst, cuts):
     """
     cls = [assign_class(num,cuts) for num in lst]
     return pd.DataFrame(cls)
+
+def tsne_2d_visulization(input_feat, plot_labels, ax=None,
+                         output_file=None, verbose=1, perplexity=40,
+                         n_iter=500, alpha=1):
+    """
+    """
+    df = pd.DataFrame()
+
+    if len(plot_labels) == len(input_feat):
+        plot_labels = [plot_labels]
+    else:
+        assert len(plot_labels[0]) == len(input_feat)
+
+    nplots = len(plot_labels)
+    nbins = []
+
+    for i in range(nplots):
+        df['plot_labels' + str(i)] = plot_labels[i]
+        nbins.append(len(pd.value_counts(df['plot_labels' + str(i)])))
+
+    tsne = TSNE(n_components=2, verbose=verbose,
+                perplexity=perplexity, n_iter=n_iter)
+    tsne_results = tsne.fit_transform(input_feat)
+
+    df['tsne-2d-one'] = tsne_results[:,0]
+    df['tsne-2d-two'] = tsne_results[:,1]
+
+    if ax is None:
+        fig, ax = plt.subplots(nplots,1,figsize=(8*nplots,5))
+        if not isinstance(ax,list) and not isinstance(ax, np.ndarray): ax = [ax]
+    else:
+        if not isinstance(ax,list) and not isinstance(ax, np.ndarray): ax = [ax]
+        assert len(ax) == nplots
+
+    for i in range(nplots):
+        sns.scatterplot(x='tsne-2d-one', y='tsne-2d-two',
+                        hue='plot_labels' + str(i),
+                        palette=sns.color_palette("hls", nbins[i]),
+                        data=df,legend="full",alpha=alpha, ax=ax[i])
+
+    if output_file is not None:
+        plt.savefig(output_file, bbox_inches='tight')
+
+    return
