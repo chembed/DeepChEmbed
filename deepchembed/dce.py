@@ -41,7 +41,7 @@ class DCE():
 
     def train_model(self, data_train, norm_feature=True, training_prints=True,
                     compiled=False, clustering_loss='kld', decoder_loss='mse',
-                    clustering_loss_weight=0.5,
+                    clustering_loss_weight=0.5, hardening_coeff=2.0,
                     optimizer='adam', lr=0.001, decay=0.0):
         """ """
         if (not compiled):
@@ -83,7 +83,7 @@ class DCE():
             if iteration % self.update_interval == 0:
                 # updating centroid
                 q, _ = self.model.predict(data_train)
-                p = DCE.target_distribution(q)
+                p = DCE.target_distribution(q, n=hardening_coeff)
                 y_pred = q.argmax(1)
                 delta_label_i = np.sum(y_pred != y_pred_last).\
                     astype(np.float32) / y_pred.shape[0]
@@ -110,9 +110,9 @@ class DCE():
         return [np.array(y_pred), np.array(loss).transpose(), np.array(delta_label)]
 
     @staticmethod
-    def target_distribution(q):
+    def target_distribution(q, n=2.0):
         """
         target distribution P which enhances the discrimination of soft label Q
         """
-        weight = q ** 2 / q.sum(0)
+        weight = q ** n / q.sum(0)
         return (weight.T / weight.sum(1)).T
