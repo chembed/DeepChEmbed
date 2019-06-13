@@ -64,7 +64,7 @@ class DCE():
             data_train = normalize(data_train, axis=0, order=2)
 
         # initializing model by using sklean-Kmeans as guess
-        kmeans_init = KMeans(n_clusters=2)
+        kmeans_init = KMeans(n_clusters=self.n_clusters)
         kmeans_init.build_model()
         encoder  = Model(inputs=self.model.input,
                          outputs=self.model.get_layer(\
