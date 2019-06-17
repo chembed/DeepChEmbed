@@ -82,9 +82,9 @@ class DCE():
         self.model.get_layer(name='clustering').\
             set_weights([kmeans_init.model.cluster_centers_])
 
-        assert hardening_order in HARDENING_FUNCS.keys()
+        assert hardening_order in DCE.HARDENING_FUNCS.keys()
         assert hardening_strength >= 1.0
-        h_func = HARDENING_FUNCS[hardening_order]
+        h_func = DCE.HARDENING_FUNCS[hardening_order]
 
         loss = []
         delta_label = []
@@ -94,7 +94,7 @@ class DCE():
             if iteration % self.update_interval == 0:
                 # updating centroid
                 q, _ = self.model.predict(data_train)
-                p = hardening(q, h_func, hardening_strength)
+                p = DCE.hardening(q, h_func, hardening_strength)
                 y_pred = q.argmax(1)
                 delta_label_i = np.sum(y_pred != y_pred_last).\
                     astype(np.float32) / y_pred.shape[0]
