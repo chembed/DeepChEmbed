@@ -13,6 +13,12 @@ class DCE():
     """
     class to build a deep chemical embedding model
     """
+    HARDENING_FUNCS = {
+        1: lambda x: x,
+        3: lambda x: (-2*x + 3) * x**2,
+        5: lambda x: ((6*x - 15)*x + 10) * x**3,
+        7: lambda x: (((-20*x + 70)*x - 84)*x + 35) * x**4,
+        9: lambda x: ((((70*x - 315)*x + 540)*x -420)*x + 126) * x**5}
 
     def __init__(self, autoencoder_dims, n_clusters, update_interval=50,
                  max_iteration=1e4, clustering_tol=1e-4, alpha=1.0):
@@ -42,8 +48,8 @@ class DCE():
     def train_model(self, data_train, norm_feature=True, training_prints=True,
                     compiled=False, clustering_loss='kld', decoder_loss='mse',
                     clustering_loss_weight=0.5,
-                    hardening_method='simple',
-                    hardening_order=2.0,
+                    hardening_order=1,
+                    hardening_strength=2.0,
                     optimizer='adam', lr=0.001, decay=0.0):
         """ """
         if (not compiled):
@@ -76,12 +82,9 @@ class DCE():
         self.model.get_layer(name='clustering').\
             set_weights([kmeans_init.model.cluster_centers_])
 
-        assert hardening_method in ['simple', 'smoothstep']
-        assert hardening_order >=1
-        if hardening_method == 'simple':
-            hardening_func = DCE.simple_hardening
-        else:
-            hardening_func = DCE.smoothstep_hardening
+        assert hardening_order in HARDENING_FUNCS.keys()
+        assert hardening_strength >= 1.0
+        h_func = HARDENING_FUNCS[hardening_order]
 
         loss = []
         delta_label = []
@@ -91,7 +94,7 @@ class DCE():
             if iteration % self.update_interval == 0:
                 # updating centroid
                 q, _ = self.model.predict(data_train)
-                p = hardening_func(q, n=hardening_order)
+                p = hardening(q, h_func, hardening_strength)
                 y_pred = q.argmax(1)
                 delta_label_i = np.sum(y_pred != y_pred_last).\
                     astype(np.float32) / y_pred.shape[0]
@@ -115,28 +118,15 @@ class DCE():
                 print('  Clustering_loss = ' + str(loss_i[1]) +
                       '; Decoder_loss = ' + str(loss_i[2]))
 
-        return [np.array(y_pred), np.array(loss).transpose(), np.array(delta_label)]
+        if iteration == self.max_iteration - 1:
+            print('Reached maximum iteration. Stopping training.')
+
+        return [np.array(y_pred), np.array(loss).T, np.array(delta_label)]
 
     @staticmethod
-    def simple_hardening(q, n=2.0):
-        """
-        hardening distribution P by polynomial functions with order of n
-        """
-        weight = q ** n / q.sum(0)
-        return (weight.T / weight.sum(1)).T
-
-    @staticmethod
-    def smoothstep_hardening(q, n=3):
+    def hardening(q, h_func, stength):
         """
         hardening distribution P by smoothsetp harderning with order of n
         """
-        assert n % 2 == 1
-        functions = {
-            1: lambda x: x,
-            3: lambda x: (-2*x + 3) * x**2,
-            5: lambda x: ((6*x - 15)*x + 10) * x**3,
-            7: lambda x: (((-20*x + 70)*x - 84)*x + 35) * x**4,
-            9: lambda x: ((((70*x - 315)*x + 540)*x -420)*x + 126) * x**5}
-
-        weight = functions[n](q) / q.sum(0)
+        weight = h_func(q) ** stength / q.sum(0)
         return (weight.T / weight.sum(1)).T
