@@ -45,11 +45,12 @@ class DCE():
 
         return
 
-    def train_model(self, data_train, norm_feature=True, training_prints=True,
-                    compiled=False, clustering_loss='kld', decoder_loss='mse',
-                    clustering_loss_weight=0.5,
-                    hardening_order=1,
-                    hardening_strength=2.0,
+    def train_model(self, data_train,
+                    labels_train=None, data_test=None, labels_test=None,
+                    verbose=1,
+                    compiled=False, clustering_loss='kld',
+                    decoder_loss='mse',clustering_loss_weight=0.5,
+                    hardening_order=1, hardening_strength=2.0,
                     optimizer='adam', lr=0.001, decay=0.0):
         """ """
         if (not compiled):
@@ -68,9 +69,6 @@ class DCE():
                                              1 - clustering_loss_weight],
                                optimizer=dce_optimizer)
 
-        if(norm_feature):
-            data_train = normalize(data_train, axis=0, order=2)
-
         # initializing model by using sklean-Kmeans as guess
         kmeans_init = KMeans(n_clusters=self.n_clusters)
         kmeans_init.build_model()
@@ -82,23 +80,44 @@ class DCE():
         self.model.get_layer(name='clustering').\
             set_weights([kmeans_init.model.cluster_centers_])
 
-        assert hardening_order in DCE.HARDENING_FUNCS.keys()
-        assert hardening_strength >= 1.0
-        h_func = DCE.HARDENING_FUNCS[hardening_order]
+        # Prepare training: p disctribution methods
+        if labels_train is None:
+            # Unsupervised Learning
+            assert hardening_order in DCE.HARDENING_FUNCS.keys()
+            assert hardening_strength >= 1.0
+            h_func = DCE.HARDENING_FUNCS[hardening_order]
+        else:
+            # Supervised Learning
+            assert len(labels_train) == len(data_train)
+            assert len(np.unique(labels_train)) == self.n_clusters
+            p = np.zeros(shape=(len(labels_train), self.n_clusters))
+            for i in range(len(labels_train)):
+                p[i][labels_train[i]] = 1.0
 
+            if data_test is not None:
+                assert len(labels_test) == len(data_test)
+                assert len(np.unique(labels_test)) == self.n_clusters
+                p_test = np.zeros(shape=(len(labels_test), self.n_clusters))
+                for i in range(len(labels_test)):
+                    p_test[i][labels_test[i]] = 1.0
+
+                validation_loss = []
+
+        # training start:
         loss = []
-        delta_label = []
 
         for iteration in range(int(self.max_iteration)):
 
             if iteration % self.update_interval == 0:
-                # updating centroid
+                # updating p for unsupervised learning process
                 q, _ = self.model.predict(data_train)
-                p = DCE.hardening(q, h_func, hardening_strength)
+                if labels_train is None:
+                    p = DCE.hardening(q, h_func, hardening_strength)
+
+                # get label change i
                 y_pred = q.argmax(1)
                 delta_label_i = np.sum(y_pred != y_pred_last).\
                     astype(np.float32) / y_pred.shape[0]
-                delta_label.append(delta_label_i)
                 y_pred_last = y_pred
 
                 # exam convergence
@@ -107,21 +126,27 @@ class DCE():
                     print('Reached tolerance threshold. Stopping training.')
                     break
 
-            loss_i = self.model.train_on_batch(x=data_train,
-                                               y=[p,data_train])
-            loss.append(loss_i)
+            loss.append(self.model.train_on_batch(x=data_train,
+                                                  y=[p,data_train]))
+            if data_test is not None:
+                validation_loss.append(self.model.test_on_batch(
+                    x=data_test, y=[p_test,data_test]))
 
-            if training_prints and iteration % self.update_interval == 0:
+            if verbose > 0 and iteration % self.update_interval == 0:
                 print('Epoch: ' + str(iteration))
-                print('  Total_loss = ' + str(loss_i[0]) +
-                      ';Delta_label = ' + str(delta_label_i))
-                print('  Clustering_loss = ' + str(loss_i[1]) +
-                      '; Decoder_loss = ' + str(loss_i[2]))
+                if verbose == 1:
+                    print('  Total_loss = ' + str(loss_i[0]) +
+                          ';Delta_label = ' + str(delta_label_i))
+                    print('  Clustering_loss = ' + str(loss_i[1]) +
+                          '; Decoder_loss = ' + str(loss_i[2]))
 
         if iteration == self.max_iteration - 1:
             print('Reached maximum iteration. Stopping training.')
 
-        return [np.array(y_pred), np.array(loss).T, np.array(delta_label)]
+        if data_test is None:
+            return np.array(loss).T
+        else:
+            return [np.array(loss).T, np.array(validation_loss).T]
 
     @staticmethod
     def hardening(q, h_func, stength):

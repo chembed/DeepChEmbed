@@ -87,16 +87,13 @@ class DeepAutoEncoder(DimReducer):
 
         return
 
-    def train_model(self, data_train, norm_feature=True, compiled=False,
+    def train_model(self, data_train, compiled=False, verbose=1,
                     optimizer='adam',loss='mse',epochs=150):
         assert isinstance(self.model, Model)
 
         if(not compiled):
             self.model.compile(optimizer=optimizer, loss=loss)
 
-        if(norm_feature):
-            data_train = normalize(data_train, axis=0, order=2)
-
         history = self.model.fit(data_train, data_train, epochs=epochs,
-                                 batch_size=256,shuffle=True)
+                                 batch_size=256,verbose=verbose, shuffle=True)
         return history

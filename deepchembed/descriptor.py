@@ -9,7 +9,7 @@ import pandas as pd
 
 from abc import ABC, abstractmethod
 from rdkit import Chem
-from rdkit.Chem import AllChem
+from rdkit.Chem import AllChem, MACCSkeys
 import rdkit.Chem.rdmolops as rdmolops
 import rdkit.Chem.rdMolDescriptors as rdDesc
 import rdkit.Chem.EState.EState_VSA as EState
@@ -258,6 +258,16 @@ class rdkitDescriptors(Descriptors):
 
         return np.array(FPs)
 
+    @staticmethod
+    def batch_compute_MACCSkeys(SMILES_list):
+        """ """
+        assert len(SMILES_list) >= 1
+
+        Molecules = list(map(Chem.MolFromSmiles, SMILES_list.values))
+        FPs = list(map(lambda x: list(MACCSkeys.GenMACCSKeys(x)), Molecules))
+
+        return np.array(FPs)
+
 class mordredDescriptors(Descriptors):
     """
     A wrapper class using mordred to generate the different descpritors.
@@ -292,15 +302,28 @@ class mordredDescriptors(Descriptors):
         return desc_list
 
     @staticmethod
-    def batch_compute_all_descriptors(SMILES_list):
+    def batch_compute_all_descriptors(SMILES_list, desc_type='all',
+                                      remove_na=True):
         """  """
         assert len(SMILES_list) >= 1
+        assert desc_type in ['all', 'int','float']
         DESC_ENGINE = mordredDescriptors.DESC_ENGINE
         na_coverter = mordredDescriptors._convert_mdError_to_na
 
         Molecules = list(map(Chem.MolFromSmiles, SMILES_list))
         desc_df = DESC_ENGINE.pandas(Molecules)
         desc_df = desc_df.applymap(na_coverter)
+
+        if remove_na:
+            for col in desc_df.columns:
+                if len(pd.value_counts(desc_df[col].isna())) > 1:
+                    desc_df = desc_df.drop(col, axis=1)
+
+        if desc_type == 'int':
+            desc_df = desc_df.select_dtypes(include=['int64'])
+        elif desc_type == 'float':
+            desc_df = desc_df.select_dtypes(include=['float64'])
+
         return desc_df
 
     @staticmethod
