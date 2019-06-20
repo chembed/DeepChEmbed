@@ -77,7 +77,7 @@ def divide_classes(lst, cuts):
     cls = [assign_class(num,cuts) for num in lst]
     return pd.DataFrame(cls)
 
-def tsne_2d_visulization(input_feat, plot_labels, ax=None, labels=None,　
+def tsne_2d_visulization(input_feat, plot_labels, ax=None,
                          figsaveto=None, verbose=1, perplexity=40,
                          n_iter=500, alpha=1):
     """

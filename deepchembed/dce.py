@@ -135,10 +135,10 @@ class DCE():
             if verbose > 0 and iteration % self.update_interval == 0:
                 print('Epoch: ' + str(iteration))
                 if verbose == 1:
-                    print('  Total_loss = ' + str(loss_i[0]) +
+                    print('  Total_loss = ' + str(loss[iteration][0]) +
                           ';Delta_label = ' + str(delta_label_i))
-                    print('  Clustering_loss = ' + str(loss_i[1]) +
-                          '; Decoder_loss = ' + str(loss_i[2]))
+                    print('  Clustering_loss = ' + str(loss[iteration][1]) +
+                          '; Decoder_loss = ' + str(loss[iteration][2]))
 
         if iteration == self.max_iteration - 1:
             print('Reached maximum iteration. Stopping training.')
