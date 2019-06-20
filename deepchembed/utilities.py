@@ -77,8 +77,8 @@ def divide_classes(lst, cuts):
     cls = [assign_class(num,cuts) for num in lst]
     return pd.DataFrame(cls)
 
-def tsne_2d_visulization(input_feat, plot_labels, ax=None,
-                         output_file=None, verbose=1, perplexity=40,
+def tsne_2d_visulization(input_feat, plot_labels, ax=None, labels=None,　
+                         figsaveto=None, verbose=1, perplexity=40,
                          n_iter=500, alpha=1):
     """
     """
@@ -105,9 +105,9 @@ def tsne_2d_visulization(input_feat, plot_labels, ax=None,
 
     if ax is None:
         fig, ax = plt.subplots(nplots,1,figsize=(8*nplots,5))
-        if not isinstance(ax,list) and not isinstance(ax, np.ndarray): ax = [ax]
+        if not (isinstance(ax,list) or isinstance(ax, np.ndarray)): ax = [ax]
     else:
-        if not isinstance(ax,list) and not isinstance(ax, np.ndarray): ax = [ax]
+        if not (isinstance(ax,list) or isinstance(ax, np.ndarray)): ax = [ax]
         assert len(ax) == nplots
 
     for i in range(nplots):
@@ -116,7 +116,65 @@ def tsne_2d_visulization(input_feat, plot_labels, ax=None,
                         palette=sns.color_palette("hls", nbins[i]),
                         data=df,legend="full",alpha=alpha, ax=ax[i])
 
-    if output_file is not None:
-        plt.savefig(output_file, bbox_inches='tight')
+    if figsaveto is not None:
+        plt.savefig(figsaveto, bbox_inches='tight')
+
+    return
+
+def tsne_2d_visulization_test_and_train(
+        train_feat, train_labels, test_feat, test_labels,
+        labels=None,ax=None,figsaveto=None, verbose=1, perplexity=40,
+        n_iter=500, alpha=1):
+    """
+    """
+    assert len(train_feat[0]) == len(test_feat[0])
+
+    df_train = pd.DataFrame()
+    df_test = pd.DataFrame()
+    input_feat = np.concatenate((train_feat, test_feat), axis=0)
+    n_train = len(train_feat)
+    df_train['Training Data'] = train_labels
+    df_test['Testing Data'] = test_labels
+    assert len(pd.value_counts(df_train['Training Data'])) ==\
+        len(pd.value_counts(df_test['Testing Data']))
+    nbins = len(pd.value_counts(df_train['Training Data']))
+
+    if labels is not None:
+        assert isinstance(labels,list) or isinstance(labels,dict)
+        for i in pd.value_counts(train_labels).keys():
+            df_train['Training Data'] = df_train['Training Data'].replace(i,labels[i])
+            df_test['Testing Data'] = df_test['Testing Data'].replace(i,labels[i])
+
+    tsne = TSNE(n_components=2, verbose=verbose,
+                perplexity=perplexity, n_iter=n_iter)
+    tsne_results = tsne.fit_transform(input_feat)
+
+    df_train['tsne-2d-one'] = tsne_results[:n_train,0]
+    df_train['tsne-2d-two'] = tsne_results[:n_train,1]
+    df_test['tsne-2d-one']  = tsne_results[n_train:,0]
+    df_test['tsne-2d-two']  = tsne_results[n_train:,1]
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(10,8))
+    else:
+        assert isinstance(ax, plt.Axes)
+
+    sns.scatterplot(x='tsne-2d-one', y='tsne-2d-two',
+                    hue='Training Data',
+                    marker='o',
+                    palette=sns.color_palette("hls", nbins),
+                    data=df_train,legend="full",alpha=alpha*0.7, ax=ax)
+    markers={}
+    for i in pd.value_counts(df_test['Testing Data']).keys():
+        markers[i] = 'x'
+
+    sns.scatterplot(x='tsne-2d-one', y='tsne-2d-two',
+                    hue='Testing Data', style='Testing Data',
+                    markers=markers, s=50, linewidth=2,
+                    palette=sns.color_palette("hls", nbins),
+                    data=df_test,legend='full',alpha=alpha, ax=ax)
+
+    if figsaveto is not None:
+        plt.savefig(figsaveto, bbox_inches='tight')
 
     return
