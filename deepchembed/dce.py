@@ -153,5 +153,6 @@ class DCE():
         """
         hardening distribution P by smoothsetp harderning with order of n
         """
-        weight = h_func(q) ** stength / q.sum(0)
+        q = h_func(q)
+        weight =  q ** stength / q.sum(0)
         return (weight.T / weight.sum(1)).T

@@ -77,7 +77,7 @@ def divide_classes(lst, cuts):
     cls = [assign_class(num,cuts) for num in lst]
     return pd.DataFrame(cls)
 
-def tsne_2d_visulization(input_feat, plot_labels, ax=None,
+def tsne_2d_visulization(input_feat, plot_labels, ax=None, labels=None,
                          figsaveto=None, verbose=1, perplexity=40,
                          n_iter=500, alpha=1):
     """
@@ -93,8 +93,11 @@ def tsne_2d_visulization(input_feat, plot_labels, ax=None,
     nbins = []
 
     for i in range(nplots):
-        df['plot_labels' + str(i)] = plot_labels[i]
-        nbins.append(len(pd.value_counts(df['plot_labels' + str(i)])))
+        df['Labels_' + str(i)] = plot_labels[i]
+        if labels is not None:
+            for j in pd.value_counts(df['Labels_' + str(i)]).keys():
+                df['Labels_' + str(i)] = df['Labels_' + str(i)].replace(j,labels[j])
+        nbins.append(len(pd.value_counts(df['Labels_' + str(i)])))
 
     tsne = TSNE(n_components=2, verbose=verbose,
                 perplexity=perplexity, n_iter=n_iter)
@@ -112,9 +115,9 @@ def tsne_2d_visulization(input_feat, plot_labels, ax=None,
 
     for i in range(nplots):
         sns.scatterplot(x='tsne-2d-one', y='tsne-2d-two',
-                        hue='plot_labels' + str(i),
+                        hue='Labels_' + str(i),
                         palette=sns.color_palette("hls", nbins[i]),
-                        data=df,legend="full",alpha=alpha, ax=ax[i])
+                        data=df,legend="full",alpha=alpha, ax=ax[i],)
 
     if figsaveto is not None:
         plt.savefig(figsaveto, bbox_inches='tight')
@@ -133,17 +136,17 @@ def tsne_2d_visulization_test_and_train(
     df_test = pd.DataFrame()
     input_feat = np.concatenate((train_feat, test_feat), axis=0)
     n_train = len(train_feat)
-    df_train['Training Data'] = train_labels
-    df_test['Testing Data'] = test_labels
-    assert len(pd.value_counts(df_train['Training Data'])) ==\
-        len(pd.value_counts(df_test['Testing Data']))
-    nbins = len(pd.value_counts(df_train['Training Data']))
+    df_train['Training Labels'] = train_labels
+    df_test['Testing Labels'] = test_labels
+    assert len(pd.value_counts(df_train['Training Labels'])) ==\
+        len(pd.value_counts(df_test['Testing Labels']))
+    nbins = len(pd.value_counts(df_train['Training Labels']))
 
     if labels is not None:
         assert isinstance(labels,list) or isinstance(labels,dict)
         for i in pd.value_counts(train_labels).keys():
-            df_train['Training Data'] = df_train['Training Data'].replace(i,labels[i])
-            df_test['Testing Data'] = df_test['Testing Data'].replace(i,labels[i])
+            df_train['Training Labels'] = df_train['Training Labels'].replace(i,labels[i])
+            df_test['Testing Labels'] = df_test['Testing Labels'].replace(i,labels[i])
 
     tsne = TSNE(n_components=2, verbose=verbose,
                 perplexity=perplexity, n_iter=n_iter)
@@ -160,16 +163,16 @@ def tsne_2d_visulization_test_and_train(
         assert isinstance(ax, plt.Axes)
 
     sns.scatterplot(x='tsne-2d-one', y='tsne-2d-two',
-                    hue='Training Data',
+                    hue='Training Labels',
                     marker='o',
                     palette=sns.color_palette("hls", nbins),
                     data=df_train,legend="full",alpha=alpha*0.7, ax=ax)
     markers={}
-    for i in pd.value_counts(df_test['Testing Data']).keys():
+    for i in pd.value_counts(df_test['Testing Labels']).keys():
         markers[i] = 'x'
 
     sns.scatterplot(x='tsne-2d-one', y='tsne-2d-two',
-                    hue='Testing Data', style='Testing Data',
+                    hue='Testing Labels', style='Testing Labels',
                     markers=markers, s=50, linewidth=2,
                     palette=sns.color_palette("hls", nbins),
                     data=df_test,legend='full',alpha=alpha, ax=ax)
