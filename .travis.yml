@@ -16,6 +16,9 @@ before_install:
     - ./miniconda.sh -b -p "$PWD/miniconda/"
     - export PATH="$PWD/miniconda/bin/:$PATH"
     - yes | conda update conda  > /dev/null
+    - conda config --set always_yes yes --set changeps1 no
+    - conda config --add channels conda-forge
+    - conda install -q conda-build
     - conda creat -q -n deepchembed python=3.6
     - source activate deepchembed
 
