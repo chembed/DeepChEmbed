@@ -16,11 +16,13 @@ before_install:
     - ./miniconda.sh -b -p "$PWD/miniconda/"
     - export PATH="$PWD/miniconda/bin/:$PATH"
     - yes | conda update conda  > /dev/null
+    - conda creat -q -n deepchembed python=3.6
+    - source activate deepchembed
 
 # set up enviroment
 install:
   # Source conda environment:
-    - yes|conda env create -f environment.yml > /dev/null
+    - yes | conda env update -f=environment.yml > /dev/null 
     - source activate deepchembed
 #   - yes|conda install numpy==1.16.3 > /dev/null
 #   - yes|conda install scipy==1.2.1 > /dev/null
