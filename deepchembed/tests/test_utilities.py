@@ -12,11 +12,14 @@ def test_clean_out_of_bound():
     return
 
 def test_bi_class():
-
+    df = [1,3,7,8]
+    bound = 4
+    assert utilities.bi_class(df, bound).equals(pd.Series([0,0,1,1]))
     return
 
 def test_check_dtypes_count():
-
+    df = pd.DataFrame([0,1.5,2.5,9,10])
+    assert len(utilities.check_dtypes_count) == 2
     return
 
 def test_dedup_input_cols():
