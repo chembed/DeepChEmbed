@@ -80,7 +80,23 @@ def divide_classes(lst, cuts):
 def tsne_2d_visulization(input_feat, plot_labels, ax=None, labels=None,
                          figsaveto=None, verbose=1, perplexity=40,
                          n_iter=500, alpha=1):
-    """
+    """Projection of high-dimensional data into 2-dimensional representation
+    using t-SNE.
+
+    Args:
+        input_feat: a 2d array that contains features of the input.
+        plot_labels: labels of the input features for plotting. it could be a
+                     list of labels, and and in that case, multiple figures
+                     will be plotted.
+        ax: a matplotlib.Axes object or a list of matplotlib.Axes for the
+            plotting. If specified, the length should equal plot_labels.
+        labels: a list or a dict of label strings, for replacing the contents
+                of plot_labels
+        figsaveto: path for saving the figure.
+        verbose: printing variable, default 1
+        perplexity: t-SNE parameter, default is 40
+        n_iter: t-SNE parameter, default is 500
+        alpha: transparency of plot labels, default is 1.
     """
     df = pd.DataFrame()
 
@@ -128,7 +144,22 @@ def tsne_2d_visulization_test_and_train(
         train_feat, train_labels, test_feat, test_labels,
         labels=None,ax=None,figsaveto=None, verbose=1, perplexity=40,
         n_iter=500, alpha=1):
-    """
+    """Projection of high-dimensional data into 2-dimensional representation
+    using t-SNE, including both the training and testing point.
+
+    Args:
+        train_feat: a 2d array that contains features of the training.
+        train_labels: the labels of training features.
+        test_feat: a 2d array that contains features of the testing.
+        test_labels: the labels of testing features.
+        ax: a matplotlib.Axes object for the plotting.
+        labels: a list or a dict of label strings, for replacing the contents
+                of plot_labels
+        figsaveto: path for saving the figure.
+        verbose: printing variable, default 1
+        perplexity: t-SNE parameter, default is 40
+        n_iter: t-SNE parameter, default is 500
+        alpha: transparency of plot labels, default is 1.
     """
     assert len(train_feat[0]) == len(test_feat[0])
 
@@ -181,8 +212,8 @@ def tsne_2d_visulization_test_and_train(
         plt.savefig(figsaveto, bbox_inches='tight')
 
     return
-    
-    
+
+
 def plot_confusion_matrix(y_true, y_pred, classes,
                           normalize=False,
                           title=None,
@@ -225,7 +256,7 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
              rotation_mode="anchor")
 
-             
+
     # Loop over data dimensions and create text annotations.
     fmt = '.2f' if normalize else 'd'
     thresh = cm.max() / 2.
