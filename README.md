@@ -65,10 +65,11 @@ __DeepChEmbed__  is an open-source python package which develops new types of ch
 
 ### 	Tutorials
 
-You can find all the tutorial scripts in this directory: [https://github.com/chembed/deepchembed/blob/master/deepchembed/tutorial](https://github.com/chembed/deepchembed/blob/master/deepchembed/tutorial)
+You can find all the tutorial scripts in this directory: [https://github.com/chembed/DeepChEmbed/tree/master/deepchembed/tutorials](https://github.com/chembed/DeepChEmbed/tree/master/deepchembed/tutorials)
 
 ## Directory Structure
-   deepchembed (master)
+
+deepchembed (master)
     |--data  
        |-- 
     |--doc  
