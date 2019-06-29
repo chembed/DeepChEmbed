@@ -69,7 +69,7 @@ You can find all the tutorial scripts in this directory: [https://github.com/che
 
 ## Directory Structure
 
-deepchembed (master)
+       deepchembed (master)
     |--data  
        |-- 
     |--doc  
