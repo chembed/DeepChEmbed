@@ -1,9 +1,10 @@
 [![Build Status](https://travis-ci.org/chembed/DeepChEmbed.svg?branch=master)](https://travis-ci.org/chembed/DeepChEmbed)
 
-# DeepChEmbed
+# DeepChEmbed &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <img src="doc/Logo.png" alt="CHEMBED" title="CHEMBED" width="15%" height="15%"> 
+
 Training domain-aware embeddings for clustering purposes, written in Python and Keras  
 
-Authors: **Hang Hu**, **Yang Liu**, **Yueyang Chen**
+Authors: **Hang Hu**, **Yang Liu**, **Yueyang Chen**, **Robert Rallo**
 
 ----
 
@@ -11,9 +12,11 @@ Authors: **Hang Hu**, **Yang Liu**, **Yueyang Chen**
 
 __DeepChEmbed__  is an open-source python package which develops new types of chemical embeddings for the purpose of improving the classification of chemical properties, such as biodegradability, toxicity and _etc_.
 
+Check more details from our [poster](https://github.com/chembed/DeepChEmbed/tree/master/doc/deepchembed_poster.pdf) for [UW DIRECT](https://www.cei.washington.edu/training/direct/) Program 
+
 ----
 
-### Current Features  
+### Current Features 
 
 * Wrapper model class for Kmeans and Autoencoder
 * Combined training of Autoencoder and KMeans Clustering/Classifying 
@@ -94,7 +97,6 @@ You can find all the tutorial scripts in this directory: [https://github.com/che
     |--README.md
     |--environment.yml
     |--requirements.txt
-
 
 ## Contributions
 
