@@ -21,6 +21,9 @@ import mordred.error as mdError
 class Descriptors(ABC):
     """
     An abstract class for descriptor computation.
+
+    Attributes:
+        Molecule: a rdkit.Chem.rdchem.Mol object, stores the chemical info.
     """
     def __init__(self, SMILES = None):
         """ Descriptor Constructor """
@@ -34,13 +37,15 @@ class Descriptors(ABC):
         self.Molecule = Chem.MolFromSmiles(SMILES)
         return
 
-    @abstractmethod
     def compute_all_descriptors(self):
+        """ compute descriptors for one molecule"""
         pass
 
     @abstractmethod
     def batch_compute_all_descriptors(SMILES_list):
-        """ must implemented as @static methods"""
+        """ compute descriptors for a list of molecules, must
+        implemented as @staticmethod.
+        """
         pass
 
 
@@ -51,22 +56,28 @@ class rdkitDescriptors(Descriptors):
     Initilized with SIMLES of a molecule
 
     Attributes:
-    Molecule       -- an object of rdkit.Chem.rdchem.Mol
+        Molecule: an object of rdkit.Chem.rdchem.Mol
 
     Methods:
-    set_molecule
+        set_molecule
 
-    compute_all_descriptors
-    compute_properties
-    compute_connectivity_and_shape_indexes
-    compute_MOE_descriptors
-    compute_MQN_descriptors
-    compute_Morgan_fingerprint
+        compute_all_descriptors
+        compute_properties
+        compute_connectivity_and_shape_indexes
+        compute_MOE_descriptors
+        compute_MQN_descriptors
+        compute_Morgan_fingerprint
 
     """
 
     def compute_all_descriptors(self,desc_type='all'):
-        """ compute all descriptors avaiable from the rdkit package """
+        """compute all descriptors avaiable from the rdkit package,
+
+        Args:
+            desc_type: descriptor type, could be 'all', 'int', or 'float'
+        Return:
+            desc_dict: descriptor dictionary.
+        """
         assert desc_type in ['all', 'int','float']
 
         desc_dict = {}
@@ -96,7 +107,14 @@ class rdkitDescriptors(Descriptors):
 
     @staticmethod
     def batch_compute_all_descriptors(SMILES_list, desc_type='all'):
-        """ """
+        """compute all descriptors avaiable from the rdkit package for a list
+        of molecules.
+
+        Args:
+            desc_type: descriptor type, could be 'all', 'int', or 'float'
+        Return:
+            desc_df: descriptors pandas.DataFrame.
+        """
         assert len(SMILES_list) >= 1
 
         Molecules = list(map(Chem.MolFromSmiles, SMILES_list))
@@ -113,10 +131,14 @@ class rdkitDescriptors(Descriptors):
         return desc_df
 
     def compute_properties(self, feature_name = None):
-        """
-        compute the basic properties from the rdkit package
+        """compute the basic properties from the rdkit package
 
-        return decriptors types: mixed integer and floats
+        Args:
+            feature_name: a list of input features names. if not specified, all
+                          avaiable features will be calculated.
+
+        Returns:
+            prop_dict: property dictionary, mixed with float and int
         """
 
         assert type(self.Molecule) == Chem.rdchem.Mol
@@ -132,11 +154,11 @@ class rdkitDescriptors(Descriptors):
         return props_dict
 
     def compute_connectivity_and_shape_indexes(self):
-        """
-        compute the compute connectivity and shape indexes defined in
-            Rev. Comput. Chem. 2:367-422 (1991)
+        """compute the compute connectivity and shape indexes.
+        Ref: Rev. Comput. Chem. 2:367-422 (1991)
 
-        return decriptors types: floats
+        Returns:
+            CSI_dict: CSI dictionary, data type: float
         """
         assert type(self.Molecule) == Chem.rdchem.Mol
 
@@ -160,10 +182,11 @@ class rdkitDescriptors(Descriptors):
         return CSI_dict
 
     def compute_MOE_descriptors(self):
-        """
-        compute the MOE-type descriptors defined in
+        """compute the MOE-type descriptors.
+        Ref:???
 
-        return decriptors types: floats
+        Returns:
+            MOE_dict: MOE dictionary, data type: float
         """
         assert type(self.Molecule) == Chem.rdchem.Mol
 
@@ -207,11 +230,11 @@ class rdkitDescriptors(Descriptors):
         return MOE_dict
 
     def compute_MQN_descriptors(self):
-        """
-        compute the MQN-type descriptors defined in
-            Nguyen et al. ChemMedChem 4:1803-5 (2009)
+        """compute the MQN-type descriptors.
+        Ref: Nguyen et al. ChemMedChem 4:1803-5 (2009)
 
-        return decriptors types: ints
+        Returns:
+            MOE_dict: MQN dictionary, data type: int
         """
         assert type(self.Molecule) == Chem.rdchem.Mol
 
@@ -224,33 +247,16 @@ class rdkitDescriptors(Descriptors):
         return MQN_dict
 
     @staticmethod
-    def batch_compute_auto_2D_coorelation(SMILES_list):
-        """ """
-        assert len(SMILES_list) >= 1
-
-        Molecules = list(map(Chem.MolFromSmiles, SMILES_list))
-        DESC_ENGINE = rdkitDescriptors()
-        autocorr2d = []
-        for i in range(len(Molecules)):
-            DESC_ENGINE.set_molecule(SMILES_list[i])
-            autocorr2d.append(DESC_ENGINE.compute_auto_2D_coorelation())
-
-        return np.array(autocorr2d)
-
-    def compute_auto_2D_coorelation(self):
-        """wrapper function for same function in rdkit"""
-        return rdDesc.CalcAUTOCORR2D(self.Molecule)
-
-    def compute_fingerprint(self, fp_type, radius=2, nBits=2048, use_features=False):
-        """  """
-        assert type(self.Molecule) == Chem.rdchem.Mol
-        fp = AllChem.GetMorganFingerprintAsBitVect(self.Molecule, radius, nBits=nBits,
-                                                   useFeatures=use_features)
-        return list(fp.ToBinary())
-
-    @staticmethod
     def batch_compute_rdkit_fingerprints(SMILES_list):
-        """ """
+        """batch compute rdkit topological fingerprints for a list of
+        input SMILES
+
+        Args:
+            SMILES_list: a list of SMILES for computation.
+
+        Returns:
+            FPs: a numpy.array of binary rdkit fingerprints.
+        """
         assert len(SMILES_list) >= 1
 
         Molecules = list(map(Chem.MolFromSmiles, SMILES_list))
@@ -260,7 +266,14 @@ class rdkitDescriptors(Descriptors):
 
     @staticmethod
     def batch_compute_MACCSkeys(SMILES_list):
-        """ """
+        """batch compute MACCSkeys for a list of input SMILES from rdkit
+
+        Args:
+            SMILES_list: a list of SMILES for computation.
+
+        Returns:
+            FPs: a numpy.array of binary MACCSkeys.
+         """
         assert len(SMILES_list) >= 1
 
         Molecules = list(map(Chem.MolFromSmiles, SMILES_list.values))
@@ -286,12 +299,12 @@ class mordredDescriptors(Descriptors):
 
     DESC_ENGINE = mdCalc(mdDesc, ignore_3D=True)
 
-    def set_DESC_ENGINE(self):
-        """To be implemented"""
-        pass
-
     def compute_all_descriptors(self):
-        """ """
+        """compute all modred descriptors for one molecule
+
+        Returns:
+            desc_list: a list of modred descriptors, mixed datatype.
+        """
         assert type(self.Molecule) == Chem.rdchem.Mol
         desc_list = dict(zip(list(self.DESC_ENGINE._name_dict.keys()),
                              self.DESC_ENGINE(self.Molecule)))
@@ -304,7 +317,15 @@ class mordredDescriptors(Descriptors):
     @staticmethod
     def batch_compute_all_descriptors(SMILES_list, desc_type='all',
                                       remove_na=True):
-        """  """
+        """compute all descriptors avaiable from the modred package for a list
+        of molecules. and remove NA and error if presented.
+
+        Args:
+            desc_type: descriptor type, could be 'all', 'int', or 'float'
+            remove_na: boolean, True for removing all NA in the return dataFrame
+        Return:
+            desc_df: descriptors pandas.DataFrame.
+        """
         assert len(SMILES_list) >= 1
         assert desc_type in ['all', 'int','float']
         DESC_ENGINE = mordredDescriptors.DESC_ENGINE
@@ -328,7 +349,8 @@ class mordredDescriptors(Descriptors):
 
     @staticmethod
     def _convert_mdError_to_na(x):
-        """ """
+        """helper function for converting mdError.Missing into numpy.nan
+        """
         if type(x) == mdError.Missing:
             return np.nan
         else:

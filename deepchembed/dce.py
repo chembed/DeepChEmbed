@@ -1,5 +1,5 @@
 """
-DeepChEmbed Models
+DeepChEmbed （DCE) Models
 """
 from dimreducer import DeepAutoEncoder
 from cluster import KMeansLayer
@@ -11,8 +11,24 @@ import numpy as np
 
 class DCE():
     """
-    class to build a deep chemical embedding model
+    The class to build a deep chemical embedding model.
+
+    Attributes:
+        autoencoder_dims: a list of dimensions for encoder, the first
+                          element as input dimension, and the last one as
+                          hidden layer dimension.
+        n_clusters: int, number of clusters for clustering layer.
+        alpha: float, parameters for soft label assigning.
+        update_interval: int, indicating every number of epoches, the harhened
+                         labels will be upadated and/or convergence cretia will
+                         be examed.
+        max_iteration: int, maximum iteration for the combined training
+        clustering_tol: float, convergence cretia for clustering layer
+        model: keras Model variable
+        HARDENING_FUNCS: smoothsetp hardening functions for unsupervised DCE
+                         training, up to 9th order
     """
+
     HARDENING_FUNCS = {
         1: lambda x: x,
         3: lambda x: (-2*x + 3) * x**2,
@@ -22,7 +38,7 @@ class DCE():
 
     def __init__(self, autoencoder_dims, n_clusters, update_interval=50,
                  max_iteration=1e4, clustering_tol=1e-4, alpha=1.0):
-        """ """
+        """Construtor of DCE. """
         self.autoencoder_dims = autoencoder_dims
         self.n_clusters       = n_clusters
         self.alpha            = alpha
@@ -34,7 +50,13 @@ class DCE():
         return
 
     def build_model(self, norm=True, act='relu'):
-        """ """
+        """Build DCE using the initialized attributes
+
+        Args:
+            norm: boolean, wheher to add a normalization layer at the begining
+                  of the autoencoder
+            act: string, keras activation function name for autoencoder
+        """
         autoencoder = DeepAutoEncoder(self.autoencoder_dims, act)
         autoencoder.build_model(norm=norm)
         embeding = autoencoder.model.get_layer(name='embedding_layer').output
@@ -51,8 +73,35 @@ class DCE():
                     compiled=False, clustering_loss='kld',
                     decoder_loss='mse',clustering_loss_weight=0.5,
                     hardening_order=1, hardening_strength=2.0,
+                    compiled=False,
                     optimizer='adam', lr=0.001, decay=0.0):
-        """ """
+        """Train DCE Model:
+
+            If labels_train are not present, train DCE model in a unsupervised
+        learning process; otherwise, train DCE model in a supervised learning
+        process.
+
+        Args:
+            data_train: input training data
+            labels_train: true labels of traning data
+            data_test: input test data
+            labels_test: true lables of testing data
+            verbose: 0, turn off the screen prints
+            clustering_loss: string, clustering layer loss function
+            decoder_loss:, string, decoder loss function
+            clustering_loss_weight: float in [0,1], w_c,
+            harderning_order: odd int, the order of hardening function
+            harderning_strength: float >=1.0, the streng of the harderning
+            compiled: boolean, indicating if the model is compiled or not
+            optmizer: string, keras optimizers
+            lr: learning rate
+            dacay: learning rate dacay
+
+        Returns:
+            train_loss:  training loss
+            test_loss: only if data_test and labels_test are not None in
+                       supervised learning process
+        """
         if (not compiled):
             assert clustering_loss_weight <= 1 and clustering_loss_weight >= 0
 
@@ -69,6 +118,13 @@ class DCE():
                                              1 - clustering_loss_weight],
                                optimizer=dce_optimizer)
 
+        if (labels_train is not None):
+            supervised_learning = True
+            if verbose >= 1: print('Starting supervised learning')
+        else:
+            supervised_learning = False
+            if verbose >= 1: print('Starting unsupervised learning')
+
         # initializing model by using sklean-Kmeans as guess
         kmeans_init = KMeans(n_clusters=self.n_clusters)
         kmeans_init.build_model()
@@ -81,7 +137,7 @@ class DCE():
             set_weights([kmeans_init.model.cluster_centers_])
 
         # Prepare training: p disctribution methods
-        if labels_train is None:
+        if not supervised_learning:
             # Unsupervised Learning
             assert hardening_order in DCE.HARDENING_FUNCS.keys()
             assert hardening_strength >= 1.0
@@ -111,7 +167,7 @@ class DCE():
             if iteration % self.update_interval == 0:
                 # updating p for unsupervised learning process
                 q, _ = self.model.predict(data_train)
-                if labels_train is None:
+                if not supervised_learning:
                     p = DCE.hardening(q, h_func, hardening_strength)
 
                 # get label change i
@@ -128,7 +184,7 @@ class DCE():
 
             loss.append(self.model.train_on_batch(x=data_train,
                                                   y=[p,data_train]))
-            if data_test is not None:
+            if supervised_learning and data_test is not None:
                 validation_loss.append(self.model.test_on_batch(
                     x=data_test, y=[p_test,data_test]))
 
@@ -150,8 +206,16 @@ class DCE():
 
     @staticmethod
     def hardening(q, h_func, stength):
-        """
-        hardening distribution P by smoothsetp harderning with order of n
+        """hardening distribution P and return Q
+
+        Args:
+            q: input distributions.
+            h_func: input harderning function.
+            strength: hardening strength.
+
+        returns:
+            p: hardened and normatlized distributions.
+
         """
         q = h_func(q)
         weight =  q ** stength / q.sum(0)

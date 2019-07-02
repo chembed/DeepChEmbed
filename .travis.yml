@@ -1,3 +1,6 @@
+git:
+  quiet: true
+
 language: python
 
 matrix:
@@ -15,13 +18,17 @@ before_install:
     - chmod +x miniconda.sh
     - ./miniconda.sh -b -p "$PWD/miniconda/"
     - export PATH="$PWD/miniconda/bin/:$PATH"
-    - yes | conda update conda  > /dev/null
+    - conda config --set always_yes yes --set changeps1 no
+    - conda update -q conda  
+    - conda config --add channels conda-forge
+    - conda install -q conda-build
+    - conda creat -q -n deepchembed python=3.6
+    - source activate deepchembed
 
 # set up enviroment
 install:
   # Source conda environment:
-    - yes|conda env create -f environment.yml > /dev/null
-    - source activate deepchembed
+    - conda env update -f=environment.yml > /dev/null 
 #   - yes|conda install numpy==1.16.3 > /dev/null
 #   - yes|conda install scipy==1.2.1 > /dev/null
 #   - yes|conda install scikit-learn==0.20.3 > /dev/null
